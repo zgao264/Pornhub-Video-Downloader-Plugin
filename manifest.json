@@ -1,0 +1,29 @@
+{
+	"manifest_version": 2,
+	"name": "Pornhub视频下载插件",
+	"version": "1.9",
+	"description": "通过向Pornhub视频页面注入JS获取视频接口信息，提取链接下载。",
+	"author": "Zgao",
+	"permissions": [
+		"downloads"
+	],
+	"icons":
+	{
+		"16":"./img/ph16.png",
+		"48": "./img/ph48.png",
+		"128": "./img/ph128.png"
+	},
+	"browser_action":
+	{
+		"default_icon": "./img/ph16.png",
+		"default_popup": "popup.html"
+	},
+	"content_scripts": 
+	[
+		{
+			"matches": ["https://*.pornhub.com/view_video.php?viewkey=*","https://*.pornhubpremium.com/view_video.php?viewkey=*"],
+			"js": ["content-script.js"]
+		}
+	],
+	"homepage_url": "https://zgao.top"
+}

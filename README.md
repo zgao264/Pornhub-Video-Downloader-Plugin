@@ -10,7 +10,7 @@ Pornhub视频下载Chrome插件
 本地加载插件的方法：
 
 url地址栏打开    chrome://extensions/
-![image](https://github.com/zgao264/Pornhub-Video-Downloader/tree/master/img/usage.png)
+![image](./img/usage.png)
 
 ### chrome内核的浏览器（例如360,360极速这类浏览器）
 拖入浏览器即可

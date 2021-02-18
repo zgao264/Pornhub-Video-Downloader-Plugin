@@ -4,43 +4,12 @@
 		if (!jsString) {
 			jsString = document.querySelector("#player >script:nth-child(1)")
 		}
-		if (jsString) {
-			jsString = jsString.innerHTML
-			jsString = `	var playerObjList = {};\n${jsString}`
-			var flashvars = jsString.match("flashvars_[0-9]{1,}")[0]
-			eval(jsString)
-			var jsObject = eval(flashvars)
-			resolve(jsObject)
-		}
-		jsString = document.querySelector("#video-player-bg > script:nth-child(6)")
-		if (jsString) {
-			jsString = jsString.innerHTML
-			console.log(jsString)
-			var videoType = []
-			var urlTitle = jsString.match(/setVideoTitle\('(.*?)'\);/)[1]
-			var urlLow = jsString.match(/setVideoUrlLow\('(.*?)'\);/)[1]
-			if (urlLow){
-				var obj ={
-					key: "Low",
-					val: urlLow,
-					video_title: urlTitle
-				}
-				videoType.push(obj)
-			}
-			var urlHigh = jsString.match(/setVideoUrlHigh\('(.*?)'\);/)[1]
-			if (urlHigh){
-				var obj ={
-					key: "High",
-					val: urlHigh,
-					video_title: urlTitle
-				}
-				videoType.push(obj)
-			}
-			chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-			if (request.cmd == 'test') 
-				sendResponse(videoType);
-	});
-		}
+		jsString = jsString.innerHTML
+		jsString = `	var playerObjList = {};\n${jsString}`
+		var flashvars = jsString.match("flashvars_[0-9]{1,}")[0]
+		eval(jsString)
+		var jsObject = eval(flashvars)
+		resolve(jsObject)
 	})
 }
 

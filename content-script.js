@@ -68,7 +68,7 @@ Func().then(res => {
 
 function getMp4Url(url){
 	var xhr = new XMLHttpRequest();
-	xhr.open("GET", url , false);
+	xhr.open("GET", url , true);
 	xhr.onload = function(){
 	if (xhr.readyState === 4 && xhr.status === 200){
 		mp4UrlJson = JSON.parse(xhr.responseText);

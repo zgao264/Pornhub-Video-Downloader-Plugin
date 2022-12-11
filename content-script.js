@@ -39,9 +39,25 @@
 			chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			if (request.cmd == 'test') 
 				sendResponse(videoType);
-	});
+			});
 		}
 	})
+}
+
+function getMp4Url(url){
+    return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url , true);
+        xhr.onload = function(){
+            if (xhr.readyState === 4 && xhr.status === 200){
+                mp4UrlJson = JSON.parse(xhr.responseText);
+                resolve(mp4UrlJson);
+            } else {
+                reject(xhr.statusText);
+            }
+        };
+        xhr.send();
+    });
 }
 
 Func().then(res => {
@@ -49,30 +65,20 @@ Func().then(res => {
 	Object.keys(res['mediaDefinitions']).forEach((item) => {
 		var itemInfo = res['mediaDefinitions'][item]
 		if (itemInfo['format'] == 'mp4') {
-			var mp4UrlJson = getMp4Url(itemInfo['videoUrl']);
-			for (const mp4Url of mp4UrlJson){
-				var obj = {
-				key: mp4Url['quality'],
-				val: mp4Url['videoUrl'],
-				video_title:res.video_title
+			getMp4Url(itemInfo['videoUrl']).then(mp4UrlJson => {
+				for (const mp4Url of mp4UrlJson){
+					var obj = {
+					key: mp4Url['quality'],
+					val: mp4Url['videoUrl'],
+					video_title:res.video_title
+					}
+				videoType.push(obj)
 				}
-			videoType.push(obj)
-			}
+			})
 		}
 	})
 	chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		if (request.cmd == 'test') 
 			sendResponse(videoType);
 	});
-})
-
-function getMp4Url(url){
-	var xhr = new XMLHttpRequest();
-	xhr.open("GET", url , true);
-	xhr.onload = function(){
-	if (xhr.readyState === 4 && xhr.status === 200){
-		mp4UrlJson = JSON.parse(xhr.responseText);
-	}};
-	xhr.send();
-	return mp4UrlJson;
-}
+});

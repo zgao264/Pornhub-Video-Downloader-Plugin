@@ -1,7 +1,7 @@
 {
 	"manifest_version": 2,
 	"name": "Pornhub视频下载插件",
-	"version": "2.0",
+	"version": "2.1",
 	"description": "通过向Pornhub视频页面注入JS获取视频接口信息，提取链接下载。从v2.0开始也支持xvideos视频下载。",
 	"author": "Zgao",
 	"permissions": [

@@ -1,5 +1,5 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"name": "Pornhub视频下载插件",
 	"version": "2.1",
 	"description": "通过向Pornhub视频页面注入JS获取视频接口信息，提取链接下载。从v2.0开始也支持xvideos视频下载。",
@@ -13,7 +13,7 @@
 		"48": "./img/ph48.png",
 		"128": "./img/ph128.png"
 	},
-	"browser_action":
+	"action":
 	{
 		"default_icon": "./img/ph16.png",
 		"default_popup": "popup.html"
@@ -24,7 +24,7 @@
 			"matches": ["https://*.pornhub.com/view_video.php?viewkey=*",
 			"https://*.pornhubpremium.com/view_video.php?viewkey=*",
 			"https://www.xvideos.com/*"],
-			"js": ["content-script.js"]
+			"js": ["lib/m3u8-parser.min.js", "content-script.js"]
 		}
 	],
 	"homepage_url": "https://zgao.top"

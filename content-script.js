@@ -18,6 +18,34 @@
 			console.log(jsString)
 			var videoType = []
 			var urlTitle = jsString.match(/setVideoTitle\('(.*?)'\);/)[1]
+			var urlHLS = jsString.match(/setVideoHLS\('(.*?)'\);/)[1]
+			if (urlHLS) {
+				try {
+					;(async () => {
+						hls = await (await fetch(urlHLS)).text()
+						const parser = new m3u8Parser.Parser()
+						parser.push(hls)
+						parser.end()
+						const playlists = parser.manifest.playlists
+						playlists.sort((a, b) => {
+							return a.attributes.BANDWIDTH - b.attributes.BANDWIDTH
+						})
+						for (const item of playlists) {
+							const obj = {
+								key: item.attributes.NAME,
+								val: urlHLS.replace("hls.m3u8", item.uri),
+								video_title: urlTitle,
+								type: "m3u8"
+							}
+							videoType.push(obj)
+						}
+						chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+							if (request.cmd == "test") sendResponse(videoType)
+						})
+					})()
+					return
+				} catch (error) {}
+			}
 			var urlLow = jsString.match(/setVideoUrlLow\('(.*?)'\);/)[1]
 			if (urlLow){
 				var obj ={

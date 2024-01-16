@@ -1,31 +1,34 @@
 {
-	"manifest_version": 3,
-	"name": "Pornhub视频下载插件",
-	"version": "2.1",
-	"description": "通过向Pornhub视频页面注入JS获取视频接口信息，提取链接下载。从v2.0开始也支持xvideos视频下载。",
-	"author": "Zgao",
-	"permissions": [
-		"downloads"
-	],
-	"icons":
-	{
-		"16":"./img/ph16.png",
-		"48": "./img/ph48.png",
-		"128": "./img/ph128.png"
-	},
-	"action":
-	{
-		"default_icon": "./img/ph16.png",
-		"default_popup": "popup.html"
-	},
-	"content_scripts": 
-	[
-		{
-			"matches": ["https://*.pornhub.com/view_video.php?viewkey=*",
-			"https://*.pornhubpremium.com/view_video.php?viewkey=*",
-			"https://www.xvideos.com/*"],
-			"js": ["lib/m3u8-parser.min.js", "content-script.js"]
-		}
-	],
-	"homepage_url": "https://zgao.top"
+  "manifest_version": 3,
+  "name": "Pornhub视频下载插件",
+  "version": "2.1",
+  "description": "通过向Pornhub视频页面注入JS获取视频接口信息，提取链接下载。从v2.0开始也支持xvideos视频下载。",
+  "author": "Zgao",
+  "permissions": ["downloads"],
+  "icons": {
+    "16": "./img/ph16.png",
+    "48": "./img/ph48.png",
+    "128": "./img/ph128.png"
+  },
+  "action": {
+    "default_icon": "./img/ph16.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.pornhub.com/view_video.php?viewkey=*",
+        "https://*.pornhubpremium.com/view_video.php?viewkey=*",
+        "https://www.xvideos.com/*"
+      ],
+      "js": ["lib/m3u8-parser.min.js", "content-script.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["get-ph-flashvars.js"],
+      "matches": ["https://*.pornhub.com/*", "https://*.pornhubpremium.com/*"]
+    }
+  ],
+  "homepage_url": "https://zgao.top"
 }

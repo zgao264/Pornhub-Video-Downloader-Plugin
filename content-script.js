@@ -1,18 +1,34 @@
-﻿function Func() {
-	return new Promise((resolve, reject) => {
-		var jsString = document.querySelector("#player >script:nth-child(2)")
-		if (!jsString) {
-			jsString = document.querySelector("#player >script:nth-child(1)")
+﻿const injectScript = (filePath, tag) => {
+	var node = document.getElementsByTagName(tag)[0]
+	var script = document.createElement("script")
+	script.setAttribute("type", "text/javascript")
+	script.setAttribute("src", filePath)
+	script.setAttribute("id", "inject")
+	node.appendChild(script)
+	return script
+}
+
+function Func() {
+	return new Promise(async (resolve, reject) => {
+		// pornhub
+		const flashvars = await new Promise((resolve2) => {
+			const handleMessage = async (event) => {
+				if (event.data.type === "get-ph-flashvars") {
+					resolve2(event.data.data)
+					window.removeEventListener("message", handleMessage)
+					script.remove()
+				}
+			}
+			window.addEventListener("message", handleMessage)
+			const script = injectScript(chrome.runtime.getURL("get-ph-flashvars.js"), "body")
+		})
+		if (flashvars) {
+			resolve(flashvars)
+			return
 		}
-		if (jsString) {
-			jsString = jsString.innerHTML
-			jsString = `	var playerObjList = {};\n${jsString}`
-			var flashvars = jsString.match("flashvars_[0-9]{1,}")[0]
-			eval(jsString)
-			var jsObject = eval(flashvars)
-			resolve(jsObject)
-		}
-		jsString = document.querySelector("#video-player-bg > script:nth-child(6)")
+
+		// xvideos
+		var jsString = document.querySelector("#video-player-bg > script:nth-child(6)")
 		if (jsString) {
 			jsString = jsString.innerHTML
 			console.log(jsString)

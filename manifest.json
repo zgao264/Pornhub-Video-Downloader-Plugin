@@ -27,7 +27,7 @@
   "web_accessible_resources": [
     {
       "resources": ["get-ph-flashvars.js"],
-      "matches": ["https://*.pornhub.com/*", "https://*.pornhubpremium.com/*"]
+      "matches": ["https://*.pornhub.com/*", "https://*.pornhubpremium.com/*", "https://www.xvideos.com/*"]
     }
   ],
   "homepage_url": "https://zgao.top"

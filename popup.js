@@ -18,6 +18,13 @@ sendMessageToContentScript({ cmd: 'test', value: 'test' }, function (videoType) 
     var downList = document.querySelectorAll(".down")
     downList.forEach((item, index) => {
         item.onclick = () => {
+            const { type, val, video_title } = videoType[index];
+            if (type === "m3u8") {
+                let url = "https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html";
+                url += `?source=${val}?title=${video_title}`;
+                window.open(url); // todo: 自动下载？
+                return;
+            }
             let reg =  /[\~\.\:\/\*\?\"\|\\\<\>]/g
             chrome.downloads.download({
                 url: videoType[index].val,

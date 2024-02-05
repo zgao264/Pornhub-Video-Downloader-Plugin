@@ -1,23 +1,67 @@
-﻿function Func() {
-	return new Promise((resolve, reject) => {
-		var jsString = document.querySelector("#player >script:nth-child(2)")
-		if (!jsString) {
-			jsString = document.querySelector("#player >script:nth-child(1)")
+﻿const injectScript = (filePath, tag) => {
+	var node = document.getElementsByTagName(tag)[0]
+	var script = document.createElement("script")
+	script.setAttribute("type", "text/javascript")
+	script.setAttribute("src", filePath)
+	script.setAttribute("id", "inject")
+	node.appendChild(script)
+	return script
+}
+
+function Func() {
+	return new Promise(async (resolve, reject) => {
+		// pornhub
+		const flashvars = await new Promise((resolve2) => {
+			const handleMessage = async (event) => {
+				if (event.data.type === "get-ph-flashvars") {
+					resolve2(event.data.data)
+					window.removeEventListener("message", handleMessage)
+					script.remove()
+				}
+			}
+			window.addEventListener("message", handleMessage)
+			const script = injectScript(chrome.runtime.getURL("get-ph-flashvars.js"), "body")
+		})
+		if (flashvars) {
+			resolve(flashvars)
+			return
 		}
-		if (jsString) {
-			jsString = jsString.innerHTML
-			jsString = `	var playerObjList = {};\n${jsString}`
-			var flashvars = jsString.match("flashvars_[0-9]{1,}")[0]
-			eval(jsString)
-			var jsObject = eval(flashvars)
-			resolve(jsObject)
-		}
-		jsString = document.querySelector("#video-player-bg > script:nth-child(6)")
+
+		// xvideos
+		var jsString = document.querySelector("#video-player-bg > script:nth-child(6)")
 		if (jsString) {
 			jsString = jsString.innerHTML
 			console.log(jsString)
 			var videoType = []
 			var urlTitle = jsString.match(/setVideoTitle\('(.*?)'\);/)[1]
+			var urlHLS = jsString.match(/setVideoHLS\('(.*?)'\);/)[1]
+			if (urlHLS) {
+				try {
+					;(async () => {
+						hls = await (await fetch(urlHLS)).text()
+						const parser = new m3u8Parser.Parser()
+						parser.push(hls)
+						parser.end()
+						const playlists = parser.manifest.playlists
+						playlists.sort((a, b) => {
+							return a.attributes.BANDWIDTH - b.attributes.BANDWIDTH
+						})
+						for (const item of playlists) {
+							const obj = {
+								key: item.attributes.NAME,
+								val: urlHLS.replace("hls.m3u8", item.uri),
+								video_title: urlTitle,
+								type: "m3u8"
+							}
+							videoType.push(obj)
+						}
+						chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+							if (request.cmd == "test") sendResponse(videoType)
+						})
+					})()
+					return
+				} catch (error) {}
+			}
 			var urlLow = jsString.match(/setVideoUrlLow\('(.*?)'\);/)[1]
 			if (urlLow){
 				var obj ={
